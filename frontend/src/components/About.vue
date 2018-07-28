@@ -1,8 +1,9 @@
 <template>
     <div>
       <p>
-        About
-        Dog Icon from <a target="_blank" href="http://www.freepik.com/">Freepik</a>
+        Work in Progress.<br>
+        https://github.com/smholsen/digit_recognizer<br>
+        Icons from <a target="_blank" href="http://www.freepik.com/">Freepik</a>
         from <a target="_blank" href="www.flaticon.com">www.flaticon.com</a>
       </p>
     </div>

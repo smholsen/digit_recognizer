@@ -3,6 +3,7 @@ import tensorflow as tf
 import models.data.mnist_data as data
 from PIL import Image
 import uuid
+import os
 import base64
 
 
@@ -210,4 +211,6 @@ class Model(object):
         imgdata = list(new_img.getdata())
         # The numbers are inverted from the initial training data, so we just invert these back
         img_array = np.array([255 - x for x in imgdata])
+        # Delete the image file we created earlier
+        os.remove('tmp/' + filename)
         return img_array

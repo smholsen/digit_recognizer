@@ -8,10 +8,10 @@ app = Flask(__name__,
             static_folder="./dist/static",
             template_folder="./dist")
 
-# if 'APP_DEBUG' in os.environ:
-#     app.debug = True
-#     from werkzeug.debug import DebuggedApplication
-#     app.wsgi_app = DebuggedApplication(app.wsgi_app, True)
+if 'APP_DEBUG' in os.environ:
+    app.debug = True
+    from werkzeug.debug import DebuggedApplication
+    app.wsgi_app = DebuggedApplication(app.wsgi_app, True)
 
 CORS(app)
 
