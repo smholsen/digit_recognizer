@@ -117,7 +117,7 @@
         this.context.clearRect(0, 0, this.context.canvas.width, this.context.canvas.height); // Clears the canvas
         this.context.strokeStyle = "#000000";
         this.context.lineJoin = "round";
-        this.context.lineWidth = 10;
+        this.context.lineWidth = 15;
 
         for (let i = 0; i < this.clickX.length; i++) {
           self.context.beginPath();
