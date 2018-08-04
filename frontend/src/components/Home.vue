@@ -29,9 +29,9 @@
                 </div>
               </div>
               <div class="bubblingG">
-                <span id="bubblingG_1"></span>
-                <span id="bubblingG_2"></span>
-                <span id="bubblingG_3"></span>
+                <span class="bubblingG_1"></span>
+                <span class="bubblingG_2"></span>
+                <span class="bubblingG_3"></span>
               </div>
             </div>
             <div id="predictions" class="current-state">
@@ -65,11 +65,25 @@
               </div>
             </div>
 
+            <div id="training" class="current-state">
+              <div class="centerer">
+                <img class="mascot" src="../assets/dog_think.png">
+                <div class="speech-bubble">
+                  I'm Training!
+                </div>
+              </div>
+              <div class="bubblingG">
+                <span class="bubblingG_1"></span>
+                <span class="bubblingG_2"></span>
+                <span class="bubblingG_3"></span>
+              </div>
+            </div>
+
             <div id="improve" class="current-state">
               <div class="centerer">
                 <img class="mascot" src="../assets/kitty_train.png">
                 <div class="speech-bubble">
-                  Thanks! I will use that information to improve my future predictions!
+                  Thanks! I think I just became smarter!
                 </div>
               </div>
               <div class="button-container">
@@ -94,7 +108,7 @@
         can_predict: true,
         // Output Stages are set in the mounted section.
         output_stages: {},
-        suggested_digit: 0
+        suggested_digit: 0,
       }
     },
     components: {
@@ -146,13 +160,28 @@
         }
       },
       correct: function () {
-        this.set_output_stage(this.output_stages.training)
+        this.train(parseInt(this.suggested_digit))
       },
       not_correct: function () {
         this.set_output_stage(this.output_stages.incorrect)
       },
       train: function (actual_value) {
-        this.set_output_stage(this.output_stages.training)
+        let canvas_data_url = this.$refs.canvas.getDataUrl();
+        const path = 'http://digits.simonolsen.no/api/train';
+        this.set_output_stage(this.output_stages.is_training)
+        axios.post(path, {
+          data_url_base_64: canvas_data_url,
+          label: actual_value
+        })
+          .then(response => {
+            this.set_output_stage(this.output_stages.training)
+            this.scroll_to('output')
+            console.log("trained")
+          })
+          .catch(error => {
+            this.set_output_stage(this.output_stages.training)
+            console.log(error)
+          })
       },
       set_output_stage: function (stage) {
         this.hide_all();
@@ -161,6 +190,9 @@
         }
         else if (stage === this.output_stages.thinking) {
           this.output_stages.thinking.style.maxHeight = "500px";
+        }
+        else if (stage === this.output_stages.is_training) {
+          this.output_stages.is_training.style.maxHeight = "500px";
         }
         else if (stage === this.output_stages.prediction) {
           this.output_stages.prediction.style.maxHeight = "600px";
@@ -178,6 +210,7 @@
         this.output_stages.prediction.style.maxHeight = 0;
         this.output_stages.incorrect.style.maxHeight = 0;
         this.output_stages.training.style.maxHeight = 0;
+        this.output_stages.is_training.style.maxHeight = 0;
       }
     },
     mounted() {
@@ -187,6 +220,7 @@
         thinking: document.getElementById('thinking'),
         prediction: document.getElementById('predictions'),
         incorrect: document.getElementById('incorrect'),
+        is_training: document.getElementById('training'),
         training: document.getElementById('improve')
       }
     }

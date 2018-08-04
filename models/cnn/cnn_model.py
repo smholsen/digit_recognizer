@@ -9,6 +9,7 @@ import base64
 
 class Model(object):
     variable_storage = 'models/cnn/stored_tf_variables/saved_cnn_model.ckpt'
+    variable_storage2 = 'models/cnn/stored_tf_variables/saved_cnn_model_further_trained.ckpt'
 
     def __init__(self):
         return
@@ -148,7 +149,7 @@ class Model(object):
                         x: batch[0], y_classes: batch[1], keep_prob: 1.0})
                     print('step %d, training accuracy %g' % (i, train_accuracy))
                 # Run training with a probability of keeping output in the dropout of 0.5
-                train_step.run(feed_dict={x: batch[0], y_true: batch[1], keep_prob: 0.5})
+                train_step.run(feed_dict={x: batch[0], y_classes: batch[1], keep_prob: 0.5})
             # Print results and keep all output during testing
             print('test accuracy %g' % accuracy.eval(feed_dict={
                 x: test.images, y_classes: test.labels, keep_prob: 1.0}))
@@ -166,10 +167,35 @@ class Model(object):
         saver = tf.train.Saver()
 
         with tf.Session() as sess:
-            saver.restore(sess, self.variable_storage)
+            # Use further trained vriables
+            saver.restore(sess, self.variable_storage2)
             feed_dict = {x: [img_array], keep_prob: 1.0}
             classification = sess.run(y_conv, feed_dict)
             return np.argmax(classification[0])
+
+    def train_on_single_img(self, image, label):
+        img_array = self.prepare_image(image)
+        if img_array is None:
+            return
+        # Build the network before we restore the variables from disk, then we'll train and save the new vars.
+        network = self.build_network()
+        train_step = network['train_step']
+        x = network['x']
+        y_classes = network['y_classes']
+        keep_prob = network['keep_prob']
+        saver = tf.train.Saver()
+
+        # Convert label to one-hot
+        one_hot = np.zeros(10)
+        one_hot[label] = 1
+
+        with tf.Session() as sess:
+            # Restore and save further trained variables.
+            saver.restore(sess, self.variable_storage2)
+            feed_dict = {x: [img_array], y_classes: [one_hot], keep_prob: 1}
+            train_step.run(feed_dict=feed_dict)
+            saver.save(sess, self.variable_storage2)
+            return
 
     def prepare_image(self, image):
         # Save image so that we can process it wil PIL.Image

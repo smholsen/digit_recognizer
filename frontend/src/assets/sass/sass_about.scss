@@ -1,0 +1,19 @@
+.ab_wrapper {
+  display: block;
+  position: relative;
+
+  h1 {
+    text-align: center;
+  }
+  .btn-group {
+    width: 100%;
+    padding: 24px 12px;
+    border-radius: 0;
+    display: flex;
+    justify-content: center;
+    .btn {
+      border-spacing: 5px;
+      margin: 2px;
+    }
+  }
+}
