@@ -9,11 +9,24 @@
     width: 100%;
     padding: 24px 12px;
     border-radius: 0;
-    display: flex;
+    display: block;
+    white-space: normal;
+    text-align: center;
     justify-content: center;
+
+    a{
+      display: inline-block;
+      margin: 3px;
+    }
+
     .btn {
       border-spacing: 5px;
       margin: 2px;
+
     }
+  }
+
+  h2 {
+    margin-top: 30px;
   }
 }

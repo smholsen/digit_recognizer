@@ -133,7 +133,7 @@
           this.can_predict = false;
           this.set_output_stage(this.output_stages.thinking)
           this.scroll_to('output')
-          const path = 'http://digits.simonolsen.no/api/predict';
+          const path = 'https://digits.simonolsen.no/api/predict';
           let canvas_data_url = this.$refs.canvas.getDataUrl();
           axios.post(path, {
             data_url_base_64: canvas_data_url
@@ -167,7 +167,7 @@
       },
       train: function (actual_value) {
         let canvas_data_url = this.$refs.canvas.getDataUrl();
-        const path = 'http://digits.simonolsen.no/api/train';
+        const path = 'https://digits.simonolsen.no/api/train';
         this.set_output_stage(this.output_stages.is_training)
         axios.post(path, {
           data_url_base_64: canvas_data_url,
